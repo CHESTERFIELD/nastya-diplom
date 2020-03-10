@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<div class="card col-md-6">
+    <div class="card-body">
+        <h4 class="card-title">Log in to your account</h4>
+        <div>
+            <p>Logged out!</p>
+            <a href="{% url 'login'%}">Click here to login again.</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

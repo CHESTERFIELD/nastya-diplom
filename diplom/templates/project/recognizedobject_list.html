@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="centerstage">
+
+    <form action="" method="GET">
+        <label for="finish">От:</label>
+        <input type="date" id="start" name="from"
+               value="2018-07-22"
+               min="2015-01-01" max="2020-12-31">
+
+        <label for="finish">До:</label>
+        <input type="date" id="finish" name="to"
+               value="2018-07-22"
+               min="2015-01-01" max="2020-12-31">
+
+        <input type="submit" value="Искать"/>
+    </form>
+
+    <table class="recogn-obj-table">
+        <tr>
+<!--            <td class="number-column">№</td>-->
+            <td class="user-column">Имя</td>
+            <td class="datetime-column">Дата и Время Распознавания</td>
+            <td class="image-column">Фото</td>
+        </tr>
+        {% for obj in object_list %}
+            <div class="obj">
+
+                 <tr>
+<!--                    <td class="number-column">{{ obj.numb }}</td>-->
+                     {% if obj.user %}
+                     <td class="user-column">{{ obj.user.fio }}</td>
+                     {% else %}
+                     <td class="number-column">Unknown</td>
+                     {% endif %}
+                    <td class="datetime-column">
+                    {{ obj.created_datetime|date:"d M Y" }} {{ obj.created_datetime|time:"H:i:s" }}</td>
+                    <td class="image-column"><img src="{{ MEDIA_URL }}{{ obj.user_photo.url }}"></td>
+                </tr>
+
+            </div>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
