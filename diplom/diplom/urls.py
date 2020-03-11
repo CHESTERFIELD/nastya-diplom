@@ -5,14 +5,8 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.urls import path, include
 from django.contrib.auth import views as auth
-from rest_framework import routers
 
 from . import views
-from project.api.v1.views import CustomUserViewSet
-
-
-router = routers.DefaultRouter()
-router.register(r'users', CustomUserViewSet)
 
 
 urlpatterns = [
@@ -22,7 +16,6 @@ urlpatterns = [
     path('login/', auth.LoginView.as_view(), name='login'),
     path('logout/', auth.LogoutView.as_view(), name='logout'),
     # path('register/', views.RegisterFormView.as_view(), name='register'),
-    url(r'^urls/', include(router.urls)),
     # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
