@@ -19,3 +19,7 @@ urlpatterns = [
     # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+
+handler403 = 'diplom.views.page_403'
+handler404 = 'diplom.views.page_404'
+handler500 = 'diplom.views.page_500'

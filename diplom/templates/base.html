@@ -55,15 +55,7 @@
                       {% endblock %}
 
     </div>
-    <div class="container">
-      {% if user.is_authenticated %}
-        {% if user.is_staff %}
-            <p>Hello admin: {{ user.fio }}</p>
-        {% else %}
-            <p>Hello user: {{ user.fio }}</p>
-        {% endif %}
-    {% endif %}
-    </div>
+
 
 
 <!--    <footer></footer>-->

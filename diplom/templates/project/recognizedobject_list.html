@@ -18,12 +18,12 @@
     </form>
 
     <table class="recogn-obj-table">
-        <tr>
+        <thead>
 <!--            <td class="number-column">№</td>-->
             <td class="user-column">Имя</td>
             <td class="datetime-column">Дата и Время Распознавания</td>
             <td class="image-column">Фото</td>
-        </tr>
+        </thead>
         {% for obj in object_list %}
             <div class="obj">
 
@@ -36,7 +36,9 @@
                      {% endif %}
                     <td class="datetime-column">
                     {{ obj.created_datetime|date:"d M Y" }} {{ obj.created_datetime|time:"H:i:s" }}</td>
+                     {% if obj.user_photo %}
                     <td class="image-column"><img src="{{ MEDIA_URL }}{{ obj.user_photo.url }}"></td>
+                     {% endif %}
                 </tr>
 
             </div>
