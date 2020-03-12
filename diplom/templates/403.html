@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+<!-- 403 -->
+    <section class="container profile-container flex f-d-column j-c-space-between a-i-stretch">
+        <div class="flex f-d-column j-c-center a-i-center height-100 w-100 text-center error-page-container">
+            <h1 class="h2 error-heading">
+                403
+            </h1>
+            <div class="m-t-25">
+                <h3 class="m-t-0">Uh-oh, access to this page was denied...</h3>
+                <p>But you can try to back home and find something interesting for you.</p>
+            </div>
+            <a class="btn btn-red m-t-5" href="{% url 'home_page_url' %}">Back Home</a>
+        </div>
+    </section>
+<!-- 403 -->
+
+{% endblock %}

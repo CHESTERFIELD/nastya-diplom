@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+<!-- 404 -->
+    <section class="container profile-container flex f-d-column j-c-space-between a-i-stretch">
+        <div class="flex f-d-column j-c-center a-i-center height-100 w-100 text-center error-page-container">
+            <h1 class="h2 error-heading">
+                404
+            </h1>
+            <div class="m-t-25">
+                <h3 class="m-t-0">Sorry, page not found...</h3>
+                <p>But don't worry! We still have a lot of interesting things for you.</p>
+            </div>
+            <a class="btn btn-red m-t-5" href="{% url 'home_page_url' %}">Back Home</a>
+        </div>
+    </section>
+<!-- 404 -->
+
+{% endblock %}
