@@ -2,6 +2,7 @@ FROM python:3.7
 ENV PYTHONUNBUFFERED 1
 
 COPY ./docker/django/req.txt /requirements/req.txt
+
 RUN pip install --upgrade pip
 RUN pip install -r /requirements/req.txt
 
@@ -15,13 +16,13 @@ RUN apt-get install -y \
     postgresql-client \
     mc
 
-COPY ./nastya-diplom /app
+COPY ./diplom /app
 COPY ./docker/django/entrypoint.sh /django/entrypoint.sh
 
 RUN sed -i 's/\r//' /django/entrypoint.sh \
   && chmod +x /django/entrypoint.sh
 
-WORKDIR /app/diplom
+WORKDIR /app
 
 EXPOSE 8000
 

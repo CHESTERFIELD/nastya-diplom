@@ -14,8 +14,8 @@ services:
     env_file: .env
     volumes:
       - ./pg:/var/lib/postgresql/data/
-    ports:
-      - 5440:5432
+#    ports:
+#      - 5440:5432
 
   diplom-django-server:
     image: ${COMPOSE_PROJECT_NAME}-django:$BUILD_NUMBER
@@ -24,27 +24,18 @@ services:
       dockerfile: ./docker/django/Dockerfile
     env_file: .env
     command: python manage.py runserver 0.0.0.0:8000
-    # environment:
-    #   - VIRTUAL_HOST=${DJANGO_VIRTUAL_HOST}
-    #   - VIRTUAL_PORT=${DJANGO_VIRTUAL_PORT}
-    #   - SYNC_PERMISSIONS=1
-    #   - SYNC_GOOGLE_CONFIG=1
-    #   - RUN_MIGRATE=1
-    #   - RUN_COLLECTSTATIC=1
+    restart: always
     volumes:
-      - ./nastya-diplom:/app
+      - ./diplom:/app
     depends_on:
       - diplom-db
-    # depends_on:
-    #   - diplom-db
-    # deploy:
-    #   replicas: 3
-    #   mode: replicated
-    #   update_config:
-    #     monitor: 20s
-    #     parallelism: 1
-    #     delay: 20s
-    #   restart_policy:
-    #     condition: on-failure
-    #     delay: 5s
-    #     max_attempts: 3
+    ports:
+      - 8000:8000
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      - ADMINER_DEFAULT_SERVER=diplom-db
+    ports:
+      - 8080:8080
