@@ -36,8 +36,10 @@
 <!--          <a class="nav-item nav-link" href="https://www.linkedin.com">LinkedIn</a>-->
         </div>
         <div class="navbar-nav align-items-center ml-auto">
-          {% if user.is_authenticated and user.is_staff %}
+          {% if user.is_authenticated %}
+            {% if user.is_staff %}
             <a class="nav-item nav-link" href="{% url 'rec_objs_list_url' %}">Recognation Object</a>
+            {% endif %}
 <!--            <a class="nav-item nav-link" href="">Drafts</a>-->
             <a class="nav-item nav-link" href="{% url 'logout' %}">Log out</a>
             <a >Welcome: {{ user.username }}</a>

@@ -1,0 +1,50 @@
+version: "3.4"
+
+services:
+  diplom-db:
+    image: ${COMPOSE_PROJECT_NAME}-db:$BUILD_NUMBER
+    build:
+      context: .
+      dockerfile: ./docker/postgres/Dockerfile
+    environment:
+         POSTGRES_DB: face_recog_db
+         POSTGRES_USER: persik
+         POSTGRES_PASSWORD: qwerty123
+    restart: always
+    env_file: .env
+    volumes:
+      - ./pg:/var/lib/postgresql/data/
+    ports:
+      - 5440:5432
+
+  diplom-django-server:
+    image: ${COMPOSE_PROJECT_NAME}-django:$BUILD_NUMBER
+    build:
+      context: .
+      dockerfile: ./docker/django/Dockerfile
+    env_file: .env
+    command: python manage.py runserver 0.0.0.0:8000
+    # environment:
+    #   - VIRTUAL_HOST=${DJANGO_VIRTUAL_HOST}
+    #   - VIRTUAL_PORT=${DJANGO_VIRTUAL_PORT}
+    #   - SYNC_PERMISSIONS=1
+    #   - SYNC_GOOGLE_CONFIG=1
+    #   - RUN_MIGRATE=1
+    #   - RUN_COLLECTSTATIC=1
+    volumes:
+      - ./nastya-diplom:/app
+    depends_on:
+      - diplom-db
+    # depends_on:
+    #   - diplom-db
+    # deploy:
+    #   replicas: 3
+    #   mode: replicated
+    #   update_config:
+    #     monitor: 20s
+    #     parallelism: 1
+    #     delay: 20s
+    #   restart_policy:
+    #     condition: on-failure
+    #     delay: 5s
+    #     max_attempts: 3
