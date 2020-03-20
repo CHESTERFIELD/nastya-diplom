@@ -6,20 +6,34 @@
     <form action="" method="GET">
         <label for="finish">От:</label>
         <input type="date" id="start" name="from"
-               value="2018-07-22"
-               min="2015-01-01" max="2020-12-31">
+               value="{{ from }}"
+               min="{{ from }}" max="{{ to }}">
 
         <label for="finish">До:</label>
         <input type="date" id="finish" name="to"
-               value="2018-07-22"
-               min="2015-01-01" max="2020-12-31">
+               value="{{ to }}"
+               min="{{ from }}" max="{{ to }}">
 
         <input type="submit" value="Искать"/>
     </form>
+    <form method="LINK" action="{% url 'download_pdf' %}" target="_blank" id="download-list" style="display: none">
+        <label for="finish">От:</label>
+        <input type="date" id="start-download" name="from"
+
+               min="{{ from }}" max="{{ to }}">
+
+        <label for="finish">До:</label>
+        <input type="date" id="finish-download" name="to"
+
+               min="{{ from }}" max="{{ to }}">
+
+        <input type="submit" value="Скачать PDF" onclick="toHideDownloadListForm()"/>
+    </form>
+    <input type="button" value="Скачать PDF" onclick="toVisibleDownloadListForm()" id="button-for-download"
+            style="display: visible"/>
 
     <table class="recogn-obj-table">
         <thead>
-<!--            <td class="number-column">№</td>-->
             <td class="user-column">Имя</td>
             <td class="datetime-column">Дата и Время Распознавания</td>
             <td class="image-column">Фото</td>

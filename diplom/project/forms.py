@@ -1,11 +1,12 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser
+from diplom import settings
+from project.models import CustomUser
 
 
 class CustomUserCreationForm(UserCreationForm):
-    class Meta(UserCreationForm):
+    class Meta:
         model = CustomUser
-        fields = ('username',)
+        fields = ('username', 'password1', 'password2', 'fio', 'is_staff', 'is_active')
 
 
 class CustomUserChangeForm(UserChangeForm):

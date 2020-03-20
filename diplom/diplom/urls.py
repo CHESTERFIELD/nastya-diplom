@@ -11,11 +11,11 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('project/', include('project.api.urls')),
+    path('project/api/', include('project.api.urls')),
+    path('project/', include('project.urls')),
     path('', views.get_redirect_to_home),
     path('login/', auth.LoginView.as_view(), name='login'),
     path('logout/', auth.LogoutView.as_view(), name='logout'),
-    # path('register/', views.RegisterFormView.as_view(), name='register'),
     # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

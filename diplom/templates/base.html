@@ -38,6 +38,7 @@
         <div class="navbar-nav align-items-center ml-auto">
           {% if user.is_authenticated %}
             {% if user.is_staff %}
+            <a class="nav-item nav-link" href="{% url 'register' %}">Create New User</a>
             <a class="nav-item nav-link" href="{% url 'rec_objs_list_url' %}">Recognation Object</a>
             {% endif %}
 <!--            <a class="nav-item nav-link" href="">Drafts</a>-->
@@ -69,5 +70,8 @@
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
 <!--    <script src="{% static 'js/detailPostFadeIn.js' %}"></script>-->
+      <script src="{% static 'js/script.js' %}"></script>
   </body>
+
+
 </html>
