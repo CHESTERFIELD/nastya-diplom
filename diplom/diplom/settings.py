@@ -87,7 +87,7 @@ DATABASES = {
         'NAME': 'face_recog_db',
         'USER': 'persik',
         'PASSWORD': 'qwerty123',
-        'HOST': 'diplom-db',
+        'HOST': '127.0.0.1',
         'PORT': 5432,
     }
 }

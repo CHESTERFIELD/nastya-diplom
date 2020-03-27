@@ -26,7 +26,8 @@ def get_home_page(request):
 class RecognationObjectViewSet(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelMixin, DestroyModelMixin):
     queryset = RecognizedObject.objects.all()
     serializer_class = RecognationObjectSerializer
-
+    permission_classes = []
+    
     def get_queryset(self):
         return super().get_queryset().filter(created_datetime__lte=timezone.now())
 

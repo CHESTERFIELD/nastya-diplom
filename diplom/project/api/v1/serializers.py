@@ -26,7 +26,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class RecognationObjectSerializer(serializers.ModelSerializer):
     authentication_classes = [BasicAuthentication]
     permission_classes = (IsAuthenticated,)
-
+    #authentication_classes = []
+    #permission_classes = []
     class Meta:
         model = RecognizedObject
         fields = ['user', 'created_datetime', 'user_photo']
