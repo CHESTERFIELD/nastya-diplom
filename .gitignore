@@ -1,7 +1,10 @@
 venv
 .idea
-idea
+idea/nastysha-diplom.*
 static
 media
 __pycache__
 pg
+setting.py
+misc.xml
+nastysha-diplom.*
