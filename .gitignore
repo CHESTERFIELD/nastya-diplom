@@ -1,5 +1,7 @@
 venv
 .idea
+idea
 static
 media
 __pycache__
+pg
