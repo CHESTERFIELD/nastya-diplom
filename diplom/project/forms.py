@@ -1,5 +1,4 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from diplom import settings
 from project.models import CustomUser
 
 

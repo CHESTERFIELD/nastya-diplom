@@ -12,6 +12,7 @@ class CustomUser(AbstractUser):
     last_name = None
     email = None
     username = models.CharField(_('username'), unique=True, max_length=100)
+    password = models.CharField(max_length=100)
     fio = models.CharField(max_length=255)
 
     USERNAME_FIELD = 'username'
