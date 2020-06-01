@@ -1,4 +1,5 @@
-from django.contrib.auth import login, logout
+import jwt
+from django.contrib.auth import login, logout, user_logged_in
 from rest_framework import viewsets, mixins, views, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import action
@@ -6,6 +7,7 @@ from rest_framework.mixins import ListModelMixin, CreateModelMixin, DestroyModel
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+from rest_framework_jwt.serializers import jwt_payload_handler
 
 from diplom import settings
 from project.api.v1.serializers import CustomUserSerializer, RecognationObjectSerializer, \
@@ -20,7 +22,6 @@ class RecognationObjectViewSet(GenericViewSet, ListModelMixin, CreateModelMixin,
     queryset = RecognizedObject.objects.all()
     serializer_class = RecognationObjectSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [SessionAuthentication]
     
     def get_queryset(self):
         return super().get_queryset().all()
@@ -44,12 +45,10 @@ class CustomUserViewSet(mixins.ListModelMixin,
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [IsAuthenticated, IsAdminUser]
-    authentication_classes = [SessionAuthentication]
 
 
 class LogoutAPIView(views.APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [SessionAuthentication]
 
     def get(self, request):
         logout(request)
@@ -69,8 +68,34 @@ class LoginAPIView(views.APIView):
             if user.is_active:
                 login(request, user)
 
-            return Response(status=status.HTTP_200_OK)
+            return Response(new_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # try:
+        #     username = request.data['username']
+        #     password = request.data['password']
+        #
+        #     user = CustomUser.objects.get(username=username, password=password)
+        #     if user:
+        #         try:
+        #             payload = jwt_payload_handler(user)
+        #             token = jwt.encode(payload, settings.SECRET_KEY)
+        #             user_details = {}
+        #             user_details['name'] = "%s %s" % (
+        #                 user.first_name, user.last_name)
+        #             user_details['token'] = token
+        #             user_logged_in.send(sender=user.__class__,
+        #                                 request=request, user=user)
+        #             return Response(user_details, status=status.HTTP_200_OK)
+        #
+        #         except Exception as e:
+        #             raise e
+        #     else:
+        #         res = {
+        #             'error': 'can not authenticate with the given credentials or the account has been deactivated'}
+        #         return Response(res, status=status.HTTP_403_FORBIDDEN)
+        # except KeyError:
+        #     res = {'error': 'please provide a email and a password'}
+        #     return Response(res)
 
 
 class PdfAPIView(views.APIView):

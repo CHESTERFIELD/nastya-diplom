@@ -45,14 +45,11 @@ class RecognationObjectFilteredSerializer(serializers.ModelSerializer):
 
 class UserLoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
-    password = serializers.CharField(style={'input_type': 'password'})
+    password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     class Meta:
         model = CustomUser
         fields = ('username', 'password')
-        extra_kwargs = {
-                        'password': {'write_only': True},
-                        }
 
     def validate(self, data):
         return data
