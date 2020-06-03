@@ -11,7 +11,7 @@ from rest_framework_jwt.serializers import jwt_payload_handler
 
 from diplom import settings
 from project.api.v1.serializers import CustomUserSerializer, RecognationObjectSerializer, \
-    RecognationObjectFilteredSerializer, UserLoginSerializer, PDFSerializer
+    RecognationObjectFilteredSerializer, UserLoginSerializer, PDFSerializer, CustomUserUpdateSerializer
 from project.bl.util import generateAllDayForDate
 from project.models import RecognizedObject, CustomUser
 from project.render import Render
@@ -33,6 +33,7 @@ class RecognationObjectViewSet(GenericViewSet, ListModelMixin, CreateModelMixin,
         serializer.is_valid(raise_exception=True)
         result = serializer.save()
         serializer_result = RecognationObjectSerializer(result, many=True)
+        print(serializer_result.data)
         return Response(serializer_result.data)
 
 
@@ -45,6 +46,14 @@ class CustomUserViewSet(mixins.ListModelMixin,
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def update(self, request, *args, **kwargs):
+        user = CustomUser.objects.get(id=request.data['id'])
+        serializer = CustomUserUpdateSerializer(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(status=status.HTTP_200_OK)
 
 
 class LogoutAPIView(views.APIView):
@@ -65,37 +74,11 @@ class LoginAPIView(views.APIView):
         if serializer.is_valid(raise_exception=True):
             new_data = serializer.data
             user = CustomUser.objects.get(username=new_data['username'])
-            if user.is_active:
-                login(request, user)
+            if user.is_superuser:
+                new_data['is_superuser'] = True
 
             return Response(new_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # try:
-        #     username = request.data['username']
-        #     password = request.data['password']
-        #
-        #     user = CustomUser.objects.get(username=username, password=password)
-        #     if user:
-        #         try:
-        #             payload = jwt_payload_handler(user)
-        #             token = jwt.encode(payload, settings.SECRET_KEY)
-        #             user_details = {}
-        #             user_details['name'] = "%s %s" % (
-        #                 user.first_name, user.last_name)
-        #             user_details['token'] = token
-        #             user_logged_in.send(sender=user.__class__,
-        #                                 request=request, user=user)
-        #             return Response(user_details, status=status.HTTP_200_OK)
-        #
-        #         except Exception as e:
-        #             raise e
-        #     else:
-        #         res = {
-        #             'error': 'can not authenticate with the given credentials or the account has been deactivated'}
-        #         return Response(res, status=status.HTTP_403_FORBIDDEN)
-        # except KeyError:
-        #     res = {'error': 'please provide a email and a password'}
-        #     return Response(res)
 
 
 class PdfAPIView(views.APIView):
@@ -103,14 +86,16 @@ class PdfAPIView(views.APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get(self, request):
-        serializer = PDFSerializer(data=request.data)
+        serializer = PDFSerializer(data=request.GET)
         if serializer.is_valid(raise_exception=True):
             new_data = serializer.data
-            from_date = new_data['from_date']
-            to = new_data['to']
-            to_date = generateAllDayForDate(to)
-            rec_objects = RecognizedObject.objects.filter(created_datetime__gte=from_date,
-                                                          created_datetime__lte=to_date)
+            if new_data:
+                from_date = new_data['from_date']
+                to = new_data['to']
+                rec_objects = RecognizedObject.objects.filter(created_datetime__gte=from_date,
+                                                              created_datetime__lte=to)
+            else:
+                rec_objects = RecognizedObject.objects.all()
         else:
             rec_objects = RecognizedObject.objects.all()
         params = {

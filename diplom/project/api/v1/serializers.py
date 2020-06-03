@@ -20,11 +20,22 @@ class CustomUserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
 
+class CustomUserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'fio', 'username', 'is_staff', 'is_superuser']
+
+
 class RecognationObjectSerializer(serializers.ModelSerializer):
+    user_expand = serializers.SerializerMethodField()
 
     class Meta:
         model = RecognizedObject
-        fields = ['user', 'created_datetime', 'user_photo']
+        fields = ['user_expand', 'created_datetime', 'user_photo']
+
+    def get_user_expand(self, obj):
+        serializer = CustomUserSerializer(instance=obj.user, read_only=True, context=self.context)
+        return serializer.data
 
 
 class RecognationObjectFilteredSerializer(serializers.ModelSerializer):
@@ -56,12 +67,15 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 
 class PDFSerializer(serializers.Serializer):
-    from_date = serializers.CharField()
-    to = serializers.CharField()
+    from_date = serializers.CharField(required=False, write_only=True)
+    to = serializers.CharField(required=False, write_only=True)
 
     class Meta:
         fields = ["from_date", "to"]
-        extra_kwargs = {
-            'from_date': {'write_only': True},
-            'to': {'write_only': True},
-        }
+
+    def validate(self, data):
+        new_data = {}
+        if data:
+            new_data['from_date'] = data['from_date']
+            new_data['to'] = generateAllDayForDate(data['to'])
+        return new_data
