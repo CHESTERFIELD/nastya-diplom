@@ -28,14 +28,21 @@ class CustomUserUpdateSerializer(serializers.ModelSerializer):
 
 class RecognationObjectSerializer(serializers.ModelSerializer):
     user_expand = serializers.SerializerMethodField()
+    user = serializers.CharField(write_only=True)
 
     class Meta:
         model = RecognizedObject
-        fields = ['user_expand', 'created_datetime', 'user_photo']
+        fields = ['user_expand', 'user', 'created_datetime', 'user_photo']
 
     def get_user_expand(self, obj):
         serializer = CustomUserSerializer(instance=obj.user, read_only=True, context=self.context)
         return serializer.data
+
+    def create(self, validated_data):
+        if validated_data['user']:
+            user = CustomUser.objects.get(username=validated_data['user'])
+            validated_data['user'] = user
+        return RecognizedObject.objects.create(**validated_data)
 
 
 class RecognationObjectFilteredSerializer(serializers.ModelSerializer):
