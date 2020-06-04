@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from project.bl.util import generateAllDayForDate
 from project.models import CustomUser, RecognizedObject
+from project.utils_helper import prn
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -28,7 +29,7 @@ class CustomUserUpdateSerializer(serializers.ModelSerializer):
 
 class RecognationObjectSerializer(serializers.ModelSerializer):
     user_expand = serializers.SerializerMethodField()
-    user = serializers.CharField(write_only=True)
+    user = serializers.CharField(write_only=True, allow_blank=True, allow_null=True)
 
     class Meta:
         model = RecognizedObject
@@ -39,9 +40,12 @@ class RecognationObjectSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def create(self, validated_data):
-        if validated_data['user']:
+        if validated_data['user'] != '':
+            prn(validated_data['user'])
             user = CustomUser.objects.get(username=validated_data['user'])
             validated_data['user'] = user
+        else:
+            validated_data['user'] = None
         return RecognizedObject.objects.create(**validated_data)
 
 
