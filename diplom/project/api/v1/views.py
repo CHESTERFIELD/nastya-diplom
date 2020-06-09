@@ -33,7 +33,6 @@ class RecognationObjectViewSet(GenericViewSet, ListModelMixin, CreateModelMixin,
         serializer.is_valid(raise_exception=True)
         result = serializer.save()
         serializer_result = RecognationObjectSerializer(result, many=True)
-        print(serializer_result.data)
         return Response(serializer_result.data)
 
 

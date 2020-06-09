@@ -7,6 +7,8 @@ from project.utils_helper import prn
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    date_joined = serializers.SerializerMethodField()
+    last_login = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
 
     def create(self, validated_data):
@@ -15,9 +17,22 @@ class CustomUserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+    def get_last_login(self, obj):
+        user = CustomUser.objects.get(id=obj.id)
+        last_login = user.last_login
+        if last_login:
+            last_login = last_login.strftime("%Y-%m-%d %H.%M.%S")
+        return last_login
+
+    def get_date_joined(self, obj):
+        user = CustomUser.objects.get(id=obj.id)
+        date_joined = user.date_joined
+        date_joined = date_joined.strftime("%Y-%m-%d %H.%M.%S")
+        return date_joined
+
     class Meta:
         model = CustomUser
-        fields = ['id', 'fio', 'username', 'password', 'is_staff', 'is_superuser']
+        fields = ['id', 'fio', 'username', 'password', 'is_staff', 'is_superuser', 'date_joined', 'last_login']
         extra_kwargs = {'password': {'write_only': True}}
 
 
