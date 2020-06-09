@@ -40,12 +40,14 @@ class RecognationObjectSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def create(self, validated_data):
+        prn(validated_data['user'])
         if validated_data['user'] != '':
-            prn(validated_data['user'])
             user = CustomUser.objects.get(username=validated_data['user'])
             validated_data['user'] = user
         else:
             validated_data['user'] = None
+        
+        prn(validated_data['user'])
         return RecognizedObject.objects.create(**validated_data)
 
 

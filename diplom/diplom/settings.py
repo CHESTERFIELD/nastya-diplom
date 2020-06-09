@@ -26,7 +26,7 @@ SECRET_KEY = '*3fxt+=j%vkw6ucfxz_nvs$0po47fb&aessh^1q%^z(1sq_)2t'
 DEBUG = True
 
 if DEBUG == True:
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['*']
 else:
     ALLOWED_HOSTS = ['*']
 
@@ -90,7 +90,7 @@ DATABASES = {
         'NAME': 'face_recog_db',
         'USER': 'persik',
         'PASSWORD': 'qwerty123',
-        'HOST': 'diplom-db',
+        'HOST': '127.0.0.1',
         'PORT': 5432,
     }
 }
@@ -157,10 +157,10 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.TemplateHTMLRenderer'
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',  # enables simple command line authentication
-        'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.BasicAuthentication',  # enables simple command line authentication
+        #'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.TokenAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        #'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     )
 }
 
@@ -178,4 +178,5 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = ['http://localhost:8080',
                          'http://localhost:8000',
-                         'http://localhost:8081']
+                         'http://localhost:8081',
+                         'http://192.168.0.113:8081']

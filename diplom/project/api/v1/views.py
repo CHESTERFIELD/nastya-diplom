@@ -1,15 +1,18 @@
 import jwt
-from django.contrib.auth import logout
+from django.contrib.auth import login, logout, user_logged_in
 from rest_framework import viewsets, mixins, views, status
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, DestroyModelMixin, RetrieveModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+from rest_framework_jwt.serializers import jwt_payload_handler
 
 from diplom import settings
 from project.api.v1.serializers import CustomUserSerializer, RecognationObjectSerializer, \
     RecognationObjectFilteredSerializer, UserLoginSerializer, PDFSerializer, CustomUserUpdateSerializer
+from project.bl.util import generateAllDayForDate
 from project.models import RecognizedObject, CustomUser
 from project.render import Render
 from project.utils_helper import prn
@@ -18,7 +21,7 @@ from project.utils_helper import prn
 class RecognationObjectViewSet(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelMixin):
     queryset = RecognizedObject.objects.all()
     serializer_class = RecognationObjectSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         return super().get_queryset().all()
@@ -42,7 +45,7 @@ class CustomUserViewSet(mixins.ListModelMixin,
                         viewsets.GenericViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    #permission_classes = [IsAuthenticated, IsAdminUser]
 
     def update(self, request, *args, **kwargs):
         user = CustomUser.objects.get(id=request.data['id'])
@@ -80,7 +83,7 @@ class LoginAPIView(views.APIView):
 
 class PdfAPIView(views.APIView):
     serializer_class = PDFSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    #permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get(self, request):
         serializer = PDFSerializer(data=request.GET)
